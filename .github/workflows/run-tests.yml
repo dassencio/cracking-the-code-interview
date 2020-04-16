@@ -1,0 +1,23 @@
+name: Build and run tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        compiler: [g++, clang++]
+        os: [ubuntu-16.04, ubuntu-18.04, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install compiler
+        run: sudo apt install -qq ${{ matrix.compiler }}
+      - name: Build and run tests
+        env:
+          CXX: ${{ matrix.compiler }}
+        run: ./run-tests
